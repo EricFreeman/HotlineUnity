@@ -6,6 +6,7 @@ namespace Assets.Scripts.Weapons
     {
         public int Ammunition;
         public GameObject BulletGameObject;
+        public GameObject Tip;
 
         public float ShotDelay = .1f;
         private float _lastShot;
@@ -15,8 +16,8 @@ namespace Assets.Scripts.Weapons
             if (CanFire())
             {
                 var bullet = Instantiate(BulletGameObject);
-                bullet.transform.position = transform.position;
-                bullet.transform.rotation = transform.rotation;
+                bullet.transform.position = Tip.transform.position;
+                bullet.transform.rotation = Tip.transform.rotation;
                 bullet.GetComponent<Bullet>().Damage = Random.Range(1, 5);
 
                 _lastShot = Time.fixedTime;

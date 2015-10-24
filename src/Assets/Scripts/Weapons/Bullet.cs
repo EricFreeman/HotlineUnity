@@ -14,7 +14,10 @@ namespace Assets.Scripts.Weapons
 
         private void OnTriggerEnter(Collider col)
         {
-            Destroy(gameObject);
+            if (col.tag != "Player")
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
