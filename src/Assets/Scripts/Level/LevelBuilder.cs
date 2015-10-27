@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Util;
+﻿using Assets.Scripts.Misc;
+using Assets.Scripts.Util;
 using Dungeon.Generator;
 using UnityEngine;
 
@@ -17,6 +18,13 @@ namespace Assets.Scripts.Level
         {
             var map = Generator.Generate(MapSize.Small, 0);
 
+            var spriteSheet = GetComponent<SpriteSheet>();
+            spriteSheet.Sheet = Resources.Load<Texture2D>("Images/Sheets/Sheet1");
+            spriteSheet.TileWidth = 32;
+            spriteSheet.TileHeight = 32;
+            spriteSheet.GenerateSpriteSheet();
+
+
             for (var z = 0; z < map.Height; z++)
             {
                 for (var x = 0; x < map.Width; x++)
@@ -28,6 +36,7 @@ namespace Assets.Scripts.Level
                     {
                         var wall = Instantiate(Wall);
                         wall.transform.position = tilePosition;
+                        wall.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(0));
                     }
                     
                     if (mapTile.Attributes.HasFlag(AttributeType.Entry))
