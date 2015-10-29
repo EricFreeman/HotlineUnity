@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Misc;
+﻿using System.Xml;
+using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
 using Dungeon.Generator;
 using UnityEngine;
@@ -16,21 +17,39 @@ namespace Assets.Scripts.Level
 
         void Start()
         {
-            var map = Generator.Generate(MapSize.Small, 0);
+            BuildLevel("TestMap1");
+            UnityEditor.NavMeshBuilder.BuildNavMesh();
+        }
 
+        private void BuildLevel(string levelName)
+        {
+            var spriteSheet = GenerateSpriteSheet();
+
+            var map = XmlManager<Map>.Load("Assets/Resources/Levels/TestMap1.tmx");
+        }
+
+        private SpriteSheet GenerateSpriteSheet()
+        {
             var spriteSheet = GetComponent<SpriteSheet>();
             spriteSheet.Sheet = Resources.Load<Texture2D>("Images/Sheets/Sheet1");
             spriteSheet.TileWidth = 32;
             spriteSheet.TileHeight = 32;
             spriteSheet.GenerateSpriteSheet();
 
+            return spriteSheet;
+        }
+
+        private void BuildProceduralDungeon()
+        {
+            var spriteSheet = GenerateSpriteSheet();
+            var map = Generator.Generate(MapSize.Small, 0);
 
             for (var z = 0; z < map.Height; z++)
             {
                 for (var x = 0; x < map.Width; x++)
                 {
                     var mapTile = map[x, z];
-                    var tilePosition = new Vector3(x, 0, z) * TileSize;
+                    var tilePosition = new Vector3(x, 0, z)*TileSize;
 
                     if (mapTile.MaterialType == MaterialType.Wall)
                     {
@@ -38,7 +57,7 @@ namespace Assets.Scripts.Level
                         wall.transform.position = tilePosition;
                         wall.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(0));
                     }
-                    
+
                     if (mapTile.Attributes.HasFlag(AttributeType.Entry))
                     {
                         var player = GameObject.Find("Player");
@@ -53,8 +72,6 @@ namespace Assets.Scripts.Level
                     }
                 }
             }
-
-            UnityEditor.NavMeshBuilder.BuildNavMesh();
         }
     }
 }

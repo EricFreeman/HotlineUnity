@@ -1,19 +1,25 @@
-﻿using Assets.Scripts.Misc;
-using UnityEngine;
+﻿using System.Xml.Serialization;
 
 namespace Assets.Scripts.Level
 {
-    public class Map : MonoBehaviour
+    [XmlRoot(ElementName = "map")]
+    public class Map
     {
-        void Start()
-        {
-            var spriteSheet = GetComponent<SpriteSheet>();
-            spriteSheet.Sheet = Resources.Load<Texture2D>("Images/Sheets/Sheet1");
-            spriteSheet.TileWidth = 32;
-            spriteSheet.TileHeight = 32;
-            spriteSheet.GenerateSpriteSheet();
+        [XmlElement(ElementName = "tileset")]
+        public TileSet TileSet;
 
-            GetComponentsInChildren<Transform>()[1].GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(0));
-        }
+        [XmlElement(ElementName = "layer")]
+        public Layer Layer;
+
+        [XmlAttribute(AttributeName = "version")]
+        public string Version;
+    }
+
+    public class Layer
+    {
+    }
+
+    public class TileSet
+    {
     }
 }
