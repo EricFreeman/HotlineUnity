@@ -11,15 +11,35 @@ namespace Assets.Scripts.Level
         [XmlElement(ElementName = "layer")]
         public Layer Layer;
 
-        [XmlAttribute(AttributeName = "version")]
-        public string Version;
+        [XmlAttribute(AttributeName = "width")]
+        public int Width;
+
+        [XmlAttribute(AttributeName = "height")]
+        public int Height;
     }
 
     public class Layer
     {
+        [XmlArray(ElementName = "data")]
+        [XmlArrayItem(ElementName = "tile")]
+        public Tile[] Data;
+    }
+
+    public class Tile
+    {
+        [XmlAttribute(AttributeName = "gid")]
+        public string Gid;
     }
 
     public class TileSet
     {
+        [XmlElement(ElementName = "image")]
+        public Image Image;
+    }
+
+    public class Image
+    { 
+        [XmlAttribute(AttributeName = "source")]
+        public string Source;
     }
 }
