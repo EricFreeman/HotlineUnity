@@ -23,12 +23,21 @@ namespace Assets.Scripts.Level
         [XmlArray(ElementName = "data")]
         [XmlArrayItem(ElementName = "tile")]
         public Tile[] Data;
+
+        [XmlAttribute(AttributeName = "name")]
+        public string Name;
+
+        [XmlAttribute(AttributeName = "width")]
+        public int Width;
+
+        [XmlAttribute(AttributeName = "height")]
+        public int Height;
     }
 
     public class Tile
     {
         [XmlAttribute(AttributeName = "gid")]
-        public string Gid;
+        public int Gid;
     }
 
     public class TileSet

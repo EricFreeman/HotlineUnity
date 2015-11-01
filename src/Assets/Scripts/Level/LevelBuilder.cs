@@ -1,8 +1,9 @@
-﻿using System.Xml;
+﻿using System;
 using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
 using Dungeon.Generator;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Level
 {
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Level
     {
         public GameObject NavigationLayer;
         public GameObject Wall;
+        public GameObject Floor;
 
         public GameObject Enemy;
 
@@ -23,15 +25,32 @@ namespace Assets.Scripts.Level
 
         private void BuildLevel(string levelName)
         {
-            var spriteSheet = GenerateSpriteSheet();
-
             var map = XmlManager<Map>.Load("Assets/Resources/Levels/TestMap1.tmx");
+            var tileSheet = map.TileSet.Image.Source.Substring(3, map.TileSet.Image.Source.Length - 7);
+            var spriteSheet = GenerateSpriteSheet(tileSheet);
+
+            var width = map.Width;
+            var height = map.Height;
+
+            for (var z = 0; z < height; z++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    var tile = map.Layer.Data[z * width + x];
+                    var spriteIndex = tile.Gid - 1;
+                    var tilePosition = new Vector3(x, 0, z)*TileSize;
+
+                    var floor = Instantiate(Floor);
+                    floor.transform.position = tilePosition;
+                    floor.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(spriteIndex));
+                }
+            }
         }
 
-        private SpriteSheet GenerateSpriteSheet()
+        private SpriteSheet GenerateSpriteSheet(string tileSheet)
         {
             var spriteSheet = GetComponent<SpriteSheet>();
-            spriteSheet.Sheet = Resources.Load<Texture2D>("Images/Sheets/Sheet1");
+            spriteSheet.Sheet = Resources.Load<Texture2D>(tileSheet);
             spriteSheet.TileWidth = 32;
             spriteSheet.TileHeight = 32;
             spriteSheet.GenerateSpriteSheet();
@@ -41,7 +60,7 @@ namespace Assets.Scripts.Level
 
         private void BuildProceduralDungeon()
         {
-            var spriteSheet = GenerateSpriteSheet();
+            var spriteSheet = GenerateSpriteSheet("Images/Sheets/Sheet1");
             var map = Generator.Generate(MapSize.Small, 0);
 
             for (var z = 0; z < map.Height; z++)
