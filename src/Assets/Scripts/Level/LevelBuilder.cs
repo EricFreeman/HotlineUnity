@@ -38,7 +38,7 @@ namespace Assets.Scripts.Level
                 {
                     var tile = map.Layer.Data[z * width + x];
                     var spriteIndex = tile.Gid - 1;
-                    var tilePosition = new Vector3(x, 0, z)*TileSize;
+                    var tilePosition = new Vector3(x, 0, -z)*TileSize;
 
                     var floor = Instantiate(Floor);
                     floor.transform.position = tilePosition;
