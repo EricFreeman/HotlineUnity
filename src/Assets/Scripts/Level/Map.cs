@@ -9,7 +9,7 @@ namespace Assets.Scripts.Level
         public TileSet TileSet;
 
         [XmlElement(ElementName = "layer")]
-        public Layer Layer;
+        public Layer[] Layer;
 
         [XmlAttribute(AttributeName = "width")]
         public int Width;

@@ -32,17 +32,20 @@ namespace Assets.Scripts.Level
             var width = map.Width;
             var height = map.Height;
 
-            for (var z = 0; z < height; z++)
+            foreach (var layer in map.Layer)
             {
-                for (var x = 0; x < width; x++)
+                for (var z = 0; z < height; z++)
                 {
-                    var tile = map.Layer.Data[z * width + x];
-                    var spriteIndex = tile.Gid - 1;
-                    var tilePosition = new Vector3(x, 0, -z)*TileSize;
+                    for (var x = 0; x < width; x++)
+                    {
+                        var tile = layer.Data[z * width + x];
+                        var spriteIndex = tile.Gid - 1;
+                        var tilePosition = new Vector3(x, 0, -z) * TileSize;
 
-                    var floor = Instantiate(Floor);
-                    floor.transform.position = tilePosition;
-                    floor.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(spriteIndex));
+                        var floor = Instantiate(Floor);
+                        floor.transform.position = tilePosition;
+                        floor.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(spriteIndex));
+                    }
                 }
             }
         }
