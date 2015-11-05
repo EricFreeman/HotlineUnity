@@ -6,7 +6,7 @@ namespace Assets.Scripts.Level
     public class Map
     {
         [XmlElement(ElementName = "tileset")]
-        public TileSet TileSet;
+        public TileSet[] TileSet;
 
         [XmlElement(ElementName = "layer")]
         public Layer[] Layer;
@@ -42,8 +42,40 @@ namespace Assets.Scripts.Level
 
     public class TileSet
     {
+        [XmlAttribute(AttributeName = "firstgid")]
+        public int FirstGid;
+
         [XmlElement(ElementName = "image")]
         public Image Image;
+
+        [XmlElement(ElementName = "tile")]
+        public TileDefinition[] Tile;
+    }
+
+    public class TileDefinition
+    {
+        [XmlAttribute(AttributeName = "id")]
+        public int Id;
+
+        [XmlArray(ElementName = "properties")]
+        [XmlArrayItem(ElementName = "property")]
+        public Property[] Properties;
+    }
+
+    public class Property
+    {
+        [XmlAttribute(AttributeName = "name")]
+        public string Name;
+
+        [XmlAttribute(AttributeName = "value")]
+        public WallDirection Value;
+    }
+
+    public enum WallDirection
+    {
+        Left,
+        Top,
+        Corner
     }
 
     public class Image

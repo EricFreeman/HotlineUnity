@@ -26,7 +26,9 @@ namespace Assets.Scripts.Level
         private void BuildLevel(string levelName)
         {
             var map = XmlManager<Map>.Load("Assets/Resources/Levels/TestMap1.tmx");
-            var tileSheet = map.TileSet.Image.Source.Substring(3, map.TileSet.Image.Source.Length - 7);
+
+            // todo: load in all spritesheets here
+            var tileSheet = map.TileSet[0].Image.Source.Substring(3, map.TileSet[0].Image.Source.Length - 7);
             var spriteSheet = GenerateSpriteSheet(tileSheet);
 
             var width = map.Width;
