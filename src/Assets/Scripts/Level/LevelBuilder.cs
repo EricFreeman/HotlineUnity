@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Assets.Scripts.Level.Models;
 using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
 using Dungeon.Generator;
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Level
 
         private void BuildLevel(string levelName)
         {
-            var map = XmlManager<Map>.Load("Assets/Resources/Levels/TestMap1.tmx");
+            var map = XmlManager<Map>.Load("Assets/Resources/Levels/" + levelName + ".tmx");
 
             // todo: load in all spritesheets here
             var tileSheet = map.TileSet[0].Image.Source.Substring(3, map.TileSet[0].Image.Source.Length - 7);
@@ -40,16 +40,27 @@ namespace Assets.Scripts.Level
                 {
                     for (var x = 0; x < width; x++)
                     {
-                        var tile = layer.Data[z * width + x];
-                        var spriteIndex = tile.Gid - 1;
-                        var tilePosition = new Vector3(x, 0, -z) * TileSize;
+                        var context = new TileContext
+                        {
+                            Tile = layer.Data[z * width + x],
+                            TilePosition = new Vector3(x, 0, -z) * TileSize,
+                            SpriteSheet = spriteSheet,
+                        };
 
-                        var floor = Instantiate(Floor);
-                        floor.transform.position = tilePosition;
-                        floor.GetComponent<Renderer>().material.SetTexture("_MainTex", spriteSheet.GetTexture(spriteIndex));
+                        if (layer.Name == "Ground")
+                        {
+                            CreateGround(context);
+                        }
                     }
                 }
             }
+        }
+
+        private void CreateGround(TileContext context)
+        {
+            var floor = Instantiate(Floor);
+            floor.transform.position = context.TilePosition;
+            floor.GetComponent<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
         }
 
         private SpriteSheet GenerateSpriteSheet(string tileSheet)
@@ -73,7 +84,7 @@ namespace Assets.Scripts.Level
                 for (var x = 0; x < map.Width; x++)
                 {
                     var mapTile = map[x, z];
-                    var tilePosition = new Vector3(x, 0, z)*TileSize;
+                    var tilePosition = new Vector3(x, 0, z) * TileSize;
 
                     if (mapTile.MaterialType == MaterialType.Wall)
                     {
