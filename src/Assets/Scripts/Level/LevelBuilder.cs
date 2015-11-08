@@ -10,7 +10,9 @@ namespace Assets.Scripts.Level
     public class LevelBuilder : MonoBehaviour
     {
         public GameObject NavigationLayer;
-        public GameObject Wall;
+        public GameObject LeftWall;
+        public GameObject TopWall;
+        public GameObject CornerWall;
         public GameObject Floor;
         public GameObject Enemy;
 
