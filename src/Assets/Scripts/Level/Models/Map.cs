@@ -1,12 +1,12 @@
 ﻿using System.Xml.Serialization;
 
-namespace Assets.Scripts.Level
+namespace Assets.Scripts.Level.Models
 {
     [XmlRoot(ElementName = "map")]
     public class Map
     {
         [XmlElement(ElementName = "tileset")]
-        public TileSet[] TileSet;
+        public TileSet[] TileSets;
 
         [XmlElement(ElementName = "layer")]
         public Layer[] Layer;

@@ -8,5 +8,6 @@ namespace Assets.Scripts.Level.Models
         public Tile Tile;
         public Vector3 TilePosition;
         public SpriteSheet SpriteSheet;
+        public TileSet[] TileSheets;
     }
 }
