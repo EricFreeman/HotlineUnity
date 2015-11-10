@@ -14,6 +14,7 @@ namespace Assets.Scripts.Level
         public GameObject LeftWall;
         public GameObject TopWall;
         public GameObject CornerWall;
+        public GameObject WallCap;
         public GameObject Floor;
         public GameObject Enemy;
 
@@ -50,7 +51,7 @@ namespace Assets.Scripts.Level
                     {
                         var tileContext = new TileContext
                         {
-                            Tile = layer.Data[z * width + x],
+                            Tile = layer.Data[z * height + x],
                             TilePosition = new Vector3(x, 0, -z),
                             SpriteSheet = spriteSheet,
                             TileSheets = map.TileSets
@@ -63,6 +64,34 @@ namespace Assets.Scripts.Level
                     }
                 }
             }
+
+            AddWallCaps(map);
+        }
+
+        private void AddWallCaps(Map map)
+        {
+            var wallLayer = map.Layer.FirstOrDefault(x => x.Name == "Walls");
+            if (wallLayer == null)
+            {
+                return;
+            }
+
+            var width = map.Width;
+            var height = map.Height;
+
+            var shit = wallLayer.Data.Select(x => x.Gid).Distinct().Where(x => x != 0).OrderBy(x => x).ToList();
+
+            for (var z = 0; z < height; z++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    var currentIndex = z * height + x;
+                    if (x % width > 0)
+                    {
+                        //var leftTile = wallLayer.Data[currentIndex - 1];
+                    }
+                }
+            }
         }
 
         private void CreateGround(TileContext context)
@@ -71,6 +100,9 @@ namespace Assets.Scripts.Level
             floor.transform.position = context.TilePosition;
             floor.GetComponent<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
         }
+
+        private bool _isMovingLeft;
+        private bool _isMovingDown;
 
         private void CreateWalls(TileContext context)
         {
@@ -98,17 +130,41 @@ namespace Assets.Scripts.Level
                 if (direction != null)
                 {
                     GameObject wall = null;
+                    GameObject cap = null;
 
                     switch (direction.Value)
                     {
                         case WallDirection.Left:
                             wall = Instantiate(LeftWall);
+                            if (_isMovingLeft)
+                            {
+                                cap = Instantiate(WallCap);
+                                cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
+                            }
+
+                            _isMovingLeft = false;
+                            _isMovingDown = true;
                             break;
                         case WallDirection.Top:
                             wall = Instantiate(TopWall);
+
+                            if (_isMovingDown)
+                            {
+                                cap = Instantiate(WallCap);
+                                cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
+                            }
+
+                            _isMovingLeft = true;
+                            _isMovingDown = false;
                             break;
                         case WallDirection.Corner:
                             wall = Instantiate(CornerWall);
+
+                            cap = Instantiate(WallCap);
+                            cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
+
+                            _isMovingLeft = false;
+                            _isMovingDown = false;
                             break;
                     }
 
