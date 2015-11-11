@@ -86,9 +86,77 @@ namespace Assets.Scripts.Level
                 for (var x = 0; x < width; x++)
                 {
                     var currentIndex = z * height + x;
-                    if (x % width > 0)
+                    var currentTile = wallLayer.Data[currentIndex];
+                    if (currentTile.Gid > 0)
                     {
-                        //var leftTile = wallLayer.Data[currentIndex - 1];
+                        var currentWall = (WallDirection)shit.IndexOf(currentTile.Gid);
+
+                        switch (currentWall)
+                        {
+                            case WallDirection.Left:
+                                if (z > 0)
+                                {
+                                    var top = wallLayer.Data[currentIndex - width];
+                                    if ((int)currentWall != shit.IndexOf(top.Gid) && shit.IndexOf(top.Gid) != 2)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x - .45f, 0, -z + .45f);
+                                    }
+                                }
+                                if (z < height - 1)
+                                {
+                                    var bottom = wallLayer.Data[currentIndex + width];
+                                    if ((int)currentWall != shit.IndexOf(bottom.Gid) && shit.IndexOf(bottom.Gid) != 2)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x - .45f, 0, -z - .55f);
+                                    }
+                                }
+                                break;
+                            case WallDirection.Top:
+                                if (x > 0)
+                                {
+                                    var left = wallLayer.Data[currentIndex - 1];
+                                    if ((int)currentWall != shit.IndexOf(left.Gid) && shit.IndexOf(left.Gid) != 2)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x - .45f, 0, -z + .45f);
+                                    }
+                                }
+                                if (x < width)
+                                {
+                                    var right = wallLayer.Data[currentIndex + 1];
+                                    if ((int)currentWall != shit.IndexOf(right.Gid) && shit.IndexOf(right.Gid) != 2)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x + .55f, 0, -z + .45f);
+                                    }
+                                }
+                                break;
+                            case WallDirection.Corner:
+                                var defaultCap = Instantiate(WallCap);
+                                defaultCap.transform.position = new Vector3(x - .45f, 0, -z + .45f);
+
+                                if (x < width)
+                                {
+                                    var right = wallLayer.Data[currentIndex + 1];
+                                    if (shit.IndexOf(right.Gid) < 0)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x + .55f, 0, -z + .45f);
+                                    }
+                                }
+                                if (z < height - 1)
+                                {
+                                    var bottom = wallLayer.Data[currentIndex + width];
+                                    if (shit.IndexOf(bottom.Gid) < 0)
+                                    {
+                                        var cap = Instantiate(WallCap);
+                                        cap.transform.position = new Vector3(x - .45f, 0, -z - .55f);
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
             }
@@ -100,9 +168,6 @@ namespace Assets.Scripts.Level
             floor.transform.position = context.TilePosition;
             floor.GetComponent<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
         }
-
-        private bool _isMovingLeft;
-        private bool _isMovingDown;
 
         private void CreateWalls(TileContext context)
         {
@@ -130,41 +195,17 @@ namespace Assets.Scripts.Level
                 if (direction != null)
                 {
                     GameObject wall = null;
-                    GameObject cap = null;
 
                     switch (direction.Value)
                     {
                         case WallDirection.Left:
                             wall = Instantiate(LeftWall);
-                            if (_isMovingLeft)
-                            {
-                                cap = Instantiate(WallCap);
-                                cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
-                            }
-
-                            _isMovingLeft = false;
-                            _isMovingDown = true;
                             break;
                         case WallDirection.Top:
                             wall = Instantiate(TopWall);
-
-                            if (_isMovingDown)
-                            {
-                                cap = Instantiate(WallCap);
-                                cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
-                            }
-
-                            _isMovingLeft = true;
-                            _isMovingDown = false;
                             break;
                         case WallDirection.Corner:
                             wall = Instantiate(CornerWall);
-
-                            cap = Instantiate(WallCap);
-                            cap.transform.position = context.TilePosition + new Vector3(-.45f, 0, .45f);
-
-                            _isMovingLeft = false;
-                            _isMovingDown = false;
                             break;
                     }
 
