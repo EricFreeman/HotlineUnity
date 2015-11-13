@@ -15,6 +15,11 @@ namespace Assets.Scripts.Misc
             return _textures[index];
         }
 
+        public int Count()
+        {
+            return _textures.Length;
+        }
+
         public void GenerateSpriteSheet()
         {
             var width = Sheet.width / TileWidth;

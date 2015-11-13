@@ -171,10 +171,14 @@ namespace Assets.Scripts.Level
 
         private void CreateWalls(TileContext context)
         {
-            TileSet wallSheet = null;
+            if (context.Tile.Gid == 0) { 
+                return;
+            }
+
+        TileSet wallSheet = null;
             foreach (var sheet in context.TileSheets)
             {
-                if (sheet.FirstGid <= context.Tile.Gid)
+                if (sheet.FirstGid > context.Tile.Gid)
                 {
                     break;
                 }
