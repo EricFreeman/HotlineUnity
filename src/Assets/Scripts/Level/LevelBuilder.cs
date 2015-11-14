@@ -25,7 +25,8 @@ namespace Assets.Scripts.Level
             BuilderDefinitions = new Dictionary<string, Action<TileContext>>
             {
                 { "Ground", CreateGround },
-                { "Walls", CreateWalls }
+                { "Walls", CreateWalls },
+                { "Spawns", CreateSpawns }
             };
 
             BuildLevel("TestMap1");
@@ -175,21 +176,7 @@ namespace Assets.Scripts.Level
                 return;
             }
 
-        TileSet wallSheet = null;
-            foreach (var sheet in context.TileSheets)
-            {
-                if (sheet.FirstGid > context.Tile.Gid)
-                {
-                    break;
-                }
-
-                wallSheet = sheet;
-            }
-
-            if (wallSheet == null)
-            {
-                wallSheet = context.TileSheets.Last();
-            }
+            TileSet wallSheet = GetTileSet(context);
 
             var correctedGid = context.Tile.Gid - wallSheet.FirstGid;
             var correctedWall = wallSheet.Tile.FirstOrDefault(x => x.Id == correctedGid);
@@ -197,7 +184,7 @@ namespace Assets.Scripts.Level
             {
                 var direction = correctedWall.Properties.FirstOrDefault(x => x.Name == "WallDirection");
                 if (direction != null)
-                {
+                { 
                     GameObject wall = null;
 
                     switch (direction.Value)
@@ -220,6 +207,45 @@ namespace Assets.Scripts.Level
                 }
             }
         }
+
+        private void CreateSpawns(TileContext context)
+        {
+            if (context.Tile.Gid == 0)
+            {
+                return;
+            }
+
+            TileSet spawnSheet = GetTileSet(context);
+            var actualId = context.Tile.Gid - spawnSheet.FirstGid;
+
+            switch (actualId)
+            {
+                case 0:
+                    var enemy = Instantiate(Enemy);
+                    enemy.transform.position = context.TilePosition;
+                    break;
+                case 1:
+                    // move player here
+                    break;
+            }
+        }
+
+        private static TileSet GetTileSet(TileContext context)
+        {
+            TileSet tileSheet = null;
+            foreach (var sheet in context.TileSheets)
+            {
+                if (sheet.FirstGid > context.Tile.Gid)
+                {
+                    break;
+                }
+
+                tileSheet = sheet;
+            }
+
+            return tileSheet ?? context.TileSheets.Last();
+        } 
+
 
         private SpriteSheet GenerateSpriteSheet(string tileSheet)
         {
