@@ -18,6 +18,8 @@ namespace Assets.Scripts.Level
         public GameObject Floor;
         public GameObject Enemy;
 
+        public GameObject Player;
+
         public Dictionary<string, Action<TileContext>> BuilderDefinitions;
 
         void Start()
@@ -28,6 +30,8 @@ namespace Assets.Scripts.Level
                 { "Walls", CreateWalls },
                 { "Spawns", CreateSpawns }
             };
+
+            Player = GameObject.Find("Player");
 
             BuildLevel("TestMap1");
             UnityEditor.NavMeshBuilder.BuildNavMesh();
@@ -225,7 +229,7 @@ namespace Assets.Scripts.Level
                     enemy.transform.position = context.TilePosition;
                     break;
                 case 1:
-                    // move player here
+                    Player.transform.position = context.TilePosition;
                     break;
             }
         }
