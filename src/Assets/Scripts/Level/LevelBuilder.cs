@@ -171,7 +171,7 @@ namespace Assets.Scripts.Level
         {
             var floor = Instantiate(Floor);
             floor.transform.position = context.TilePosition;
-            floor.GetComponent<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
+            floor.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
         }
 
         private void CreateWalls(TileContext context)

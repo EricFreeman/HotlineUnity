@@ -6,7 +6,7 @@ namespace Assets.Scripts.Player
     {
         public float MovementSpeed;
 
-        void Update ()
+        void FixedUpdate ()
         {
             var delta = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")) * Time.deltaTime * MovementSpeed;
 
