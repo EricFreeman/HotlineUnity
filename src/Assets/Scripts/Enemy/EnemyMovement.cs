@@ -6,8 +6,8 @@ namespace Assets.Scripts.Enemy
 {
     public class EnemyMovement : MonoBehaviour
     {
-        public float FieldOfView = 120f;
-        public float ViewDistance = 5.5f;
+        public float FieldOfView = 90f;
+        public float ViewDistance = 4;
         public float MoveSpeed = 2f;
         public float TurnSpeed = 6f;
 
