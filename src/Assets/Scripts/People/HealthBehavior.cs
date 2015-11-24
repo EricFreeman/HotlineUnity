@@ -15,7 +15,7 @@ namespace Assets.Scripts.People
             }
         }
 
-        private void OnTriggerEnter(Collider col)
+        void OnTriggerEnter(Collider col)
         {
             var bullet = col.GetComponent<Bullet>();
 

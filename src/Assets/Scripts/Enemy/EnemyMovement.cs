@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.Enums;
+using Assets.Scripts.Weapons;
 using UnityEngine;
 
 namespace Assets.Scripts.Enemy
@@ -23,6 +24,22 @@ namespace Assets.Scripts.Enemy
 
         void FixedUpdate()
         {
+
+            var player = GameObject.Find("PlayerMesh");
+
+            var bounds = player.GetComponent<Renderer>().bounds;
+            var points = new[]
+            {
+                bounds.center,
+                bounds.center - new Vector3(bounds.extents.x, 0, bounds.extents.z)/2,
+                bounds.center + new Vector3(bounds.extents.x, 0, bounds.extents.z)/2
+            };
+
+            foreach (var point in points)
+            {
+                Debug.DrawRay(transform.position, point - transform.position + new Vector3(0, .2f, 0));
+            }
+
             switch (State)
             {
                 case EnemyState.Idle:
@@ -42,25 +59,25 @@ namespace Assets.Scripts.Enemy
 
         #region Search State
 
-        private bool searchDir;
-        private int searchAmount;
+        private bool _searchDir;
+        private int _searchAmount;
 
         private void SearchState()
         {
             if (CanSeePlayer())
             {
-                searchAmount = 0;
+                _searchAmount = 0;
                 State = EnemyState.Detect;
             }
 
-            var stopAmount = Math.Abs(searchAmount - transform.rotation.eulerAngles.y);
+            var stopAmount = Math.Abs(_searchAmount - transform.rotation.eulerAngles.y);
             if (stopAmount < 3 || (stopAmount - 360 < 3 && stopAmount - 360 > 0))
             {
-                searchDir = !searchDir;
-                searchAmount = (int)transform.rotation.eulerAngles.y + (120 * (searchDir ? 1 : -1));
+                _searchDir = !_searchDir;
+                _searchAmount = (int)transform.rotation.eulerAngles.y + (120 * (_searchDir ? 1 : -1));
             }
 
-            transform.Rotate(0, 1 * (searchDir ? 1 : -1), 0);
+            transform.Rotate(0, 1 * (_searchDir ? 1 : -1), 0);
         }
 
         #endregion
@@ -98,11 +115,51 @@ namespace Assets.Scripts.Enemy
             {
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, rayDirection, out hit) && Vector3.Distance(transform.position, _player.transform.position) < ViewDistance)
+                {
                     if (hit.transform.tag == "Player")
+                    {
                         return true;
+                    }
+                }
             }
 
             return false;
+        }
+
+        void OnTriggerEnter(Collider col)
+        {
+            var bullet = col.GetComponent<Bullet>();
+
+            if (bullet != null)
+            {
+                if (State != EnemyState.Detect)
+                {
+                    State = EnemyState.Searching;
+
+                    var player = GameObject.Find("PlayerMesh");
+
+                    var bounds = player.GetComponent<Renderer>().bounds;
+                    var points = new Vector3[]
+                    {
+                        bounds.center,
+                        bounds.center - new Vector3(bounds.extents.x, 0, bounds.extents.z)/2,
+                        bounds.center + new Vector3(bounds.extents.x, 0, bounds.extents.z)/2 
+                    };
+
+                    foreach (var point in points)
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(transform.position, point - transform.position + new Vector3(0, .2f, 0), out hit))
+                        {
+                            if (hit.transform.tag == "Player")
+                            {
+                                State = EnemyState.Detect;
+                                _lastKnownLocation = player.transform.position;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
