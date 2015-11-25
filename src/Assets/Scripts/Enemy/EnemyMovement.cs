@@ -24,22 +24,6 @@ namespace Assets.Scripts.Enemy
 
         void FixedUpdate()
         {
-
-            var player = GameObject.Find("PlayerMesh");
-
-            var bounds = player.GetComponent<Renderer>().bounds;
-            var points = new[]
-            {
-                bounds.center,
-                bounds.center - new Vector3(bounds.extents.x, 0, bounds.extents.z)/2,
-                bounds.center + new Vector3(bounds.extents.x, 0, bounds.extents.z)/2
-            };
-
-            foreach (var point in points)
-            {
-                Debug.DrawRay(transform.position, point - transform.position + new Vector3(0, .2f, 0));
-            }
-
             switch (State)
             {
                 case EnemyState.Idle:
