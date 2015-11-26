@@ -2,11 +2,12 @@
 
 namespace Assets.Scripts.Misc
 {
-    public class SpriteSheet : MonoBehaviour
+    public class SpriteSheet
     {
         public Texture2D Sheet;
         public int TileWidth;
         public int TileHeight;
+        public int FirstGid;
 
         private Texture2D[] _textures;
 

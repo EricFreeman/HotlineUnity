@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using Assets.Scripts.Level.Models;
 using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
@@ -22,6 +23,8 @@ namespace Assets.Scripts.Level
 
         public Dictionary<string, Action<TileContext>> BuilderDefinitions;
 
+        private SpriteLibrary _spriteLibrary = new SpriteLibrary();
+
         void Start()
         {
             BuilderDefinitions = new Dictionary<string, Action<TileContext>>
@@ -40,10 +43,7 @@ namespace Assets.Scripts.Level
         private void BuildLevel(string levelName)
         {
             var map = XmlManager<Map>.Load("Assets/Resources/Levels/" + levelName + ".tmx");
-
-            // todo: load in all spritesheets here
-            var tileSheet = map.TileSets[0].Image.Source.Substring(3, map.TileSets[0].Image.Source.Length - 7);
-            var spriteSheet = GenerateSpriteSheet(tileSheet);
+            _spriteLibrary.Generate(map.TileSets);
 
             var width = map.Width;
             var height = map.Height;
@@ -57,9 +57,7 @@ namespace Assets.Scripts.Level
                         var tileContext = new TileContext
                         {
                             Tile = layer.Data[z * height + x],
-                            TilePosition = new Vector3(x, 0, -z),
-                            SpriteSheet = spriteSheet,
-                            TileSheets = map.TileSets
+                            TilePosition = new Vector3(x, 0, -z)
                         };
 
                         if (BuilderDefinitions.ContainsKey(layer.Name))
@@ -169,9 +167,11 @@ namespace Assets.Scripts.Level
 
         private void CreateGround(TileContext context)
         {
+            if (context.Tile.Gid <= 0) return;
+
             var floor = Instantiate(Floor);
             floor.transform.position = context.TilePosition;
-            floor.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", context.SpriteSheet.GetTexture(context.Tile.Gid - 1));
+            floor.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", _spriteLibrary.GetTexture(context.Tile.Gid));
         }
 
         private void CreateWalls(TileContext context)
@@ -180,7 +180,7 @@ namespace Assets.Scripts.Level
                 return;
             }
 
-            TileSet wallSheet = GetTileSet(context);
+            TileSet wallSheet = _spriteLibrary.GetTileSet(context);
 
             var correctedGid = context.Tile.Gid - wallSheet.FirstGid;
             var correctedWall = wallSheet.Tile.FirstOrDefault(x => x.Id == correctedGid);
@@ -219,7 +219,7 @@ namespace Assets.Scripts.Level
                 return;
             }
 
-            TileSet spawnSheet = GetTileSet(context);
+            TileSet spawnSheet = _spriteLibrary.GetTileSet(context);
             var actualId = context.Tile.Gid - spawnSheet.FirstGid;
 
             switch (actualId)
@@ -232,12 +232,37 @@ namespace Assets.Scripts.Level
                     Player.transform.position = context.TilePosition;
                     break;
             }
+        } 
+    }
+
+    public class SpriteLibrary
+    {
+        public List<SpriteSheet> SpriteSheets = new List<SpriteSheet>();
+        private TileSet[] _tileSets = new TileSet[0];
+
+        public void Generate(TileSet[] tileSets)
+        {
+            _tileSets = tileSets;
+
+            foreach (var tileSet in tileSets)
+            {
+                var spriteSheet = new SpriteSheet
+                {
+                    Sheet = Resources.Load<Texture2D>(tileSet.Image.Source.Substring(3, tileSet.Image.Source.Length - 7)),
+                    TileWidth = tileSet.TileWidth,
+                    TileHeight = tileSet.TileHeight,
+                    FirstGid = tileSet.FirstGid
+                };
+                spriteSheet.GenerateSpriteSheet();
+
+                SpriteSheets.Add(spriteSheet);
+            }
         }
 
-        private static TileSet GetTileSet(TileContext context)
+        public TileSet GetTileSet(TileContext context)
         {
             TileSet tileSheet = null;
-            foreach (var sheet in context.TileSheets)
+            foreach (var sheet in _tileSets)
             {
                 if (sheet.FirstGid > context.Tile.Gid)
                 {
@@ -247,19 +272,25 @@ namespace Assets.Scripts.Level
                 tileSheet = sheet;
             }
 
-            return tileSheet ?? context.TileSheets.Last();
-        } 
+            return tileSheet ?? _tileSets.Last();
+        }
 
-
-        private SpriteSheet GenerateSpriteSheet(string tileSheet)
+        public Texture GetTexture(int index)
         {
-            var spriteSheet = GetComponent<SpriteSheet>();
-            spriteSheet.Sheet = Resources.Load<Texture2D>(tileSheet);
-            spriteSheet.TileWidth = 32;
-            spriteSheet.TileHeight = 32;
-            spriteSheet.GenerateSpriteSheet();
+            SpriteSheet tileSheet = null;
+            foreach (var sheet in SpriteSheets)
+            {
+                if (sheet.FirstGid > index)
+                {
+                    break;
+                }
 
-            return spriteSheet;
+                tileSheet = sheet;
+            }
+
+            tileSheet = tileSheet ?? SpriteSheets.Last();
+
+            return tileSheet.GetTexture(index - tileSheet.FirstGid);
         }
     }
 }

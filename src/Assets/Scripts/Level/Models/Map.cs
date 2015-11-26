@@ -11,11 +11,44 @@ namespace Assets.Scripts.Level.Models
         [XmlElement(ElementName = "layer")]
         public Layer[] Layer;
 
+        [XmlElement(ElementName = "objectgroup")]
+        public ObjectGroup[] ObjectGroup;
+
         [XmlAttribute(AttributeName = "width")]
         public int Width;
 
         [XmlAttribute(AttributeName = "height")]
         public int Height;
+    }
+
+    public class ObjectGroup
+    {
+        [XmlElement(ElementName = "object")]
+        public MapObject[] Object;
+    }
+
+    public class MapObject
+    {
+        [XmlAttribute(AttributeName = "id")]
+        public int Id;
+
+        [XmlAttribute(AttributeName = "gid")]
+        public int Gid;
+
+        [XmlAttribute(AttributeName = "x")]
+        public float X;
+
+        [XmlAttribute(AttributeName = "y")]
+        public float Y;
+
+        [XmlAttribute(AttributeName = "width")]
+        public int Width;
+
+        [XmlAttribute(AttributeName = "height")]
+        public int Height;
+
+        [XmlAttribute(AttributeName = "rotation")]
+        public float Rotation;
     }
 
     public class Layer
@@ -44,6 +77,12 @@ namespace Assets.Scripts.Level.Models
     {
         [XmlAttribute(AttributeName = "firstgid")]
         public int FirstGid;
+
+        [XmlAttribute(AttributeName = "tilewidth")]
+        public int TileWidth;
+
+        [XmlAttribute(AttributeName = "tileheight")]
+        public int TileHeight;
 
         [XmlElement(ElementName = "image")]
         public Image Image;
