@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
 using Assets.Scripts.Level.Models;
 using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
@@ -18,6 +17,7 @@ namespace Assets.Scripts.Level
         public GameObject WallCap;
         public GameObject Floor;
         public GameObject Enemy;
+        public GameObject SimpleObject;
 
         public GameObject Player;
 
@@ -68,7 +68,27 @@ namespace Assets.Scripts.Level
                 }
             }
 
+            for (var i = 0; i < map.ObjectGroup.Length; i++)
+            {
+                BuildObjectGroup(map.ObjectGroup[i], i);
+            }
+
             AddWallCaps(map);
+        }
+
+        private void BuildObjectGroup(ObjectGroup objectGroup, int layer)
+        {
+            if(objectGroup.Object == null) return;
+
+            foreach (var obj in objectGroup.Object)
+            {
+                var gameObj = Instantiate(SimpleObject);
+                gameObj.transform.position = new Vector3(obj.X / 32, 0, -obj.Y / 32);
+                var spriteRenderer = gameObj.GetComponentInChildren<SpriteRenderer>();
+                var texture = _spriteLibrary.GetTexture(obj.Gid);
+                var sprite = Sprite.Create(texture as Texture2D, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f));
+                spriteRenderer.sprite = sprite;
+            }
         }
 
         private void AddWallCaps(Map map)
