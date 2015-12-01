@@ -91,11 +91,9 @@ namespace Assets.Scripts.Level
                 spriteRenderer.sprite = sprite;
 
                 var scale = Math.Max(texture.width, texture.height)/16f;
-                spriteRenderer.transform.localScale = new Vector3(scale, scale, scale);
+                spriteRenderer.transform.localScale = new Vector3(3, 3, 3);
 
-                spriteRenderer.transform.localPosition = new Vector3(-texture.width / 64f, 0, texture.height / 64f);
-
-                gameObj.transform.Translate(0, 0, texture.height / 32f);
+                gameObj.transform.Translate(-.5f, 0, .5f);
                 gameObj.transform.RotateAround(gameObj.transform.position, Vector3.up, obj.Rotation);
 
                 spriteRenderer.gameObject.AddComponent<BoxCollider>();
