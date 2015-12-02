@@ -90,7 +90,6 @@ namespace Assets.Scripts.Level
                 var sprite = Sprite.Create(texture as Texture2D, new Rect(0, 0, texture.width, texture.height), new Vector2(.0f, 1f));
                 spriteRenderer.sprite = sprite;
 
-                var scale = Math.Max(texture.width, texture.height)/16f;
                 spriteRenderer.transform.localScale = new Vector3(3, 3, 3);
 
                 gameObj.transform.Translate(-.5f, 0, .5f);
