@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="34" height="34" tilewidth="32" tileheight="32" nextobjectid="9">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="34" height="34" tilewidth="32" tileheight="32" nextobjectid="14">
  <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" tilecount="4">
   <image source="../Images/Sheets/Sheet1.png" width="64" height="64"/>
  </tileset>
@@ -27,11 +27,14 @@
  <tileset firstgid="9" name="Spawns" tilewidth="32" tileheight="32" tilecount="4">
   <image source="../Images/Sheets/Spawns.png" trans="ffffff" width="64" height="64"/>
  </tileset>
- <tileset firstgid="13" name="Objects" tilewidth="32" tileheight="32" tilecount="16">
+ <tileset firstgid="13" name="Objects" tilewidth="32" tileheight="32" tilecount="4">
   <image source="../Images/Sheets/Objects1.png" trans="ffffff" width="64" height="64"/>
  </tileset>
- <tileset firstgid="29" name="Couches" tilewidth="64" tileheight="32" tilecount="2">
+ <tileset firstgid="17" name="Couches" tilewidth="64" tileheight="32" tilecount="2">
   <image source="../Images/Sheets/Couches1.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="19" name="Carpet" tilewidth="128" tileheight="96" tilecount="1">
+  <image source="../Images/Sheets/Carpet1.png" trans="ffffff" width="128" height="96"/>
  </tileset>
  <layer name="Ground" width="34" height="34">
   <data>
@@ -3513,10 +3516,17 @@
    <tile gid="0"/>
   </data>
  </layer>
- <objectgroup name="NonCollisionObjects"/>
+ <objectgroup name="NonCollisionObjects">
+  <object id="13" gid="19" x="381.091" y="168.727" width="128" height="96" rotation="0.5"/>
+ </objectgroup>
  <objectgroup name="CollisionObjects">
-  <object id="4" gid="29" x="430" y="111" width="64" height="32" rotation="2"/>
-  <object id="5" gid="30" x="140" y="475" width="64" height="32" rotation="182"/>
+  <object id="4" gid="17" x="430" y="111" width="64" height="32" rotation="2"/>
+  <object id="5" gid="18" x="140" y="475" width="64" height="32" rotation="182"/>
   <object id="8" gid="13" x="76.25" y="106.5" width="32" height="32" rotation="-6"/>
+  <object id="11" gid="13" x="394.364" y="111.818" width="32" height="32" rotation="-1"/>
+ </objectgroup>
+ <objectgroup name="NonCollisionObjects">
+  <object id="10" gid="14" x="73.3333" y="106" width="32" height="32"/>
+  <object id="12" gid="14" x="393.081" y="109.927" width="32" height="32" rotation="5"/>
  </objectgroup>
 </map>

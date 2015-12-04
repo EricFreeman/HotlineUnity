@@ -89,10 +89,13 @@ namespace Assets.Scripts.Level
                 var texture = _spriteLibrary.GetTexture(obj.Gid);
                 var sprite = Sprite.Create(texture as Texture2D, new Rect(0, 0, texture.width, texture.height), new Vector2(.0f, 1f));
                 spriteRenderer.sprite = sprite;
+                spriteRenderer.sortingOrder = layer;
 
                 gameObj.transform.RotateAround(gameObj.transform.position, Vector3.up, obj.Rotation);
 
                 spriteRenderer.gameObject.AddComponent<BoxCollider>();
+
+                spriteRenderer.transform.localPosition = new Vector3(0, 0, spriteRenderer.GetComponent<BoxCollider>().size.y * 3);
             }
         }
 
