@@ -25,6 +25,9 @@ namespace Assets.Scripts.Level.Models
     {
         [XmlElement(ElementName = "object")]
         public MapObject[] Object;
+
+        [XmlAttribute(AttributeName = "name")]
+        public string Name;
     }
 
     public class MapObject

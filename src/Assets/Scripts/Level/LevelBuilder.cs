@@ -73,7 +73,7 @@ namespace Assets.Scripts.Level
             {
                 BuildObjectGroup(map.ObjectGroup[i], i);
             }
-
+            
             AddWallCaps(map);
         }
 
@@ -96,6 +96,11 @@ namespace Assets.Scripts.Level
                 spriteRenderer.gameObject.AddComponent<BoxCollider>();
 
                 spriteRenderer.transform.localPosition = new Vector3(0, 0, spriteRenderer.GetComponent<BoxCollider>().size.y * 3);
+
+                if (objectGroup.Name == "NonCollisionObjects")
+                {
+                    Destroy(spriteRenderer.gameObject.GetComponent<BoxCollider>());
+                }
             }
         }
 
