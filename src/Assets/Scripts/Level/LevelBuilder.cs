@@ -84,7 +84,7 @@ namespace Assets.Scripts.Level
             foreach (var obj in objectGroup.Object)
             {
                 var gameObj = Instantiate(SimpleObject);
-                gameObj.transform.position = new Vector3(obj.X / 32 - .5f, .1f, -obj.Y / 32 + .5f);
+                gameObj.transform.position = new Vector3(obj.X / 32 - .5f, 0, -obj.Y / 32 + .5f);
                 var spriteRenderer = gameObj.GetComponentInChildren<SpriteRenderer>();
                 var texture = _spriteLibrary.GetTexture(obj.Gid);
                 var sprite = Sprite.Create(texture as Texture2D, new Rect(0, 0, texture.width, texture.height), new Vector2(.0f, 1f));
