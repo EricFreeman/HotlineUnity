@@ -99,6 +99,7 @@ namespace Assets.Scripts.Level
                 var sprite = Sprite.Create(texture as Texture2D, new Rect(0, 0, texture.width, texture.height), new Vector2(.0f, 1f));
                 spriteRenderer.sprite = sprite;
                 spriteRenderer.sortingOrder = layer;
+                spriteRenderer.transform.localScale = new Vector3(3, 3, 3);
 
                 gameObj.transform.RotateAround(gameObj.transform.position, Vector3.up, obj.Rotation);
 
