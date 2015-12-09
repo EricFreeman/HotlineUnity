@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
+using Assets.Scripts.Context;
 using Assets.Scripts.Level.Models;
 using Assets.Scripts.Misc;
 using Assets.Scripts.Util;
@@ -24,7 +24,7 @@ namespace Assets.Scripts.Level
 
         public Dictionary<string, Action<TileContext>> BuilderDefinitions;
 
-        private SpriteLibrary _spriteLibrary = new SpriteLibrary();
+        private readonly SpriteLibrary _spriteLibrary = new SpriteLibrary();
 
         void Start()
         {
@@ -71,7 +71,16 @@ namespace Assets.Scripts.Level
 
             for (var i = 0; i < map.ObjectGroup.Length; i++)
             {
-                BuildObjectGroup(map.ObjectGroup[i], i);
+                var objectGroup = map.ObjectGroup[i];
+
+                if (objectGroup.Name == "BloodLayer")
+                {
+                    LevelContext.BloodLayer = i;
+                }
+                else
+                {
+                    BuildObjectGroup(objectGroup, i);
+                }
             }
             
             AddWallCaps(map);
@@ -213,7 +222,7 @@ namespace Assets.Scripts.Level
                 return;
             }
 
-            TileSet wallSheet = _spriteLibrary.GetTileSet(context);
+            var wallSheet = _spriteLibrary.GetTileSet(context);
 
             var correctedGid = context.Tile.Gid - wallSheet.FirstGid;
             var correctedWall = wallSheet.Tile.FirstOrDefault(x => x.Id == correctedGid);
@@ -252,7 +261,7 @@ namespace Assets.Scripts.Level
                 return;
             }
 
-            TileSet spawnSheet = _spriteLibrary.GetTileSet(context);
+            var spawnSheet = _spriteLibrary.GetTileSet(context);
             var actualId = context.Tile.Gid - spawnSheet.FirstGid;
 
             switch (actualId)

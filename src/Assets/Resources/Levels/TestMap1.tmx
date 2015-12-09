@@ -3523,6 +3523,7 @@
   <object id="13" gid="19" x="381.091" y="168.727" width="128" height="96" rotation="0.5"/>
   <object id="20" gid="19" x="74" y="508" width="128" height="96"/>
  </objectgroup>
+ <objectgroup name="BloodLayer"/>
  <objectgroup name="CollisionObjects">
   <object id="4" gid="17" x="430" y="111" width="64" height="32" rotation="2"/>
   <object id="5" gid="18" x="199.5" y="361.75" width="64" height="32" rotation="2"/>
