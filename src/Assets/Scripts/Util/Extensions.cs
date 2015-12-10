@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Util
 {
@@ -30,6 +30,11 @@ namespace Assets.Scripts.Util
         {
             var index = UnityEngine.Random.Range(0, list.Count);
             return list[index];
+        }
+
+        public static Vector3 ApplyFunction(this Vector3 start, Func<float> action)
+        {
+            return new Vector3(start.x + action(), 0, start.z + action());
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Assets.Scripts.People
                 EventAggregator.SendMessage(new SpawnBloodMessage
                 {
                     Position = bullet.transform.position,
-                    Amount = Random.Range(bullet.Damage, bullet.Damage * 3),
+                    Damage = bullet.Damage,
                     Direction = bullet.transform.rotation.y,
                     Force = bullet.Speed
                 });
