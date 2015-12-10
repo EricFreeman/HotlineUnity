@@ -2,7 +2,6 @@
 using Assets.Scripts.Context;
 using Assets.Scripts.Messages;
 using Assets.Scripts.Util;
-using Assets.Scripts.Weapons;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -36,15 +35,27 @@ namespace Assets.Scripts.Managers
             {
                 var blood = Instantiate(SimpleObject);
                 var spriteRenderer = blood.GetComponentInChildren<SpriteRenderer>();
-                spriteRenderer.sprite = BloodSplatter;
+                spriteRenderer.sprite = BloodPool;
                 spriteRenderer.sortingOrder = LevelContext.BloodLayer;
-                blood.transform.position = message.Position.ApplyFunction(() => Random.Range(-message.Force, message.Force) / 50f);
+                blood.transform.position = message.Position.ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
 
                 var opacity = Random.Range(.5f, 1f);
                 spriteRenderer.color = new Color(255, 255, 255, opacity);
             }
 
             // Blood Bullet Path
+            for (var i = 0; i < amount; i++)
+            {
+                var blood = Instantiate(SimpleObject);
+                var spriteRenderer = blood.GetComponentInChildren<SpriteRenderer>();
+                spriteRenderer.sprite = BloodSplatter;
+                spriteRenderer.sortingOrder = LevelContext.BloodLayer;
+                blood.transform.position = message.Position + (message.Direction * (i + message.Force / 15) / 3).ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
+                spriteRenderer.transform.forward = message.Direction + new Vector3(0, Random.Range(-10f, 10f), 0);
+
+                var opacity = Random.Range(.5f, 1f);
+                spriteRenderer.color = new Color(255, 255, 255, opacity);
+            }
 
             // Gibs!
         }

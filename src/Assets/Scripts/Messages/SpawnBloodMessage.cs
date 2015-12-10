@@ -6,7 +6,7 @@ namespace Assets.Scripts.Messages
     {
         public int Damage;
         public float Force;
-        public float Direction;
+        public Vector3 Direction;
         public Vector3 Position;
     }
 }

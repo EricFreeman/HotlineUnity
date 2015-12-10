@@ -28,7 +28,7 @@ namespace Assets.Scripts.People
                 {
                     Position = bullet.transform.position,
                     Damage = bullet.Damage,
-                    Direction = bullet.transform.rotation.y,
+                    Direction = bullet.transform.forward,
                     Force = bullet.Speed
                 });
             }
