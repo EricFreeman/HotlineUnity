@@ -10,8 +10,8 @@ namespace Assets.Scripts.Managers
     public class GoreManager : MonoBehaviour, IListener<SpawnBloodMessage>
     {
         public GameObject SimpleObject;
-        public Sprite BloodPool;
-        public Sprite BloodSplatter;
+        public List<Sprite> BloodPool;
+        public List<Sprite> BloodSplatter;
 
         public List<Sprite> Gibs;
 
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Managers
             {
                 var blood = Instantiate(SimpleObject);
                 var spriteRenderer = blood.GetComponentInChildren<SpriteRenderer>();
-                spriteRenderer.sprite = BloodPool;
+                spriteRenderer.sprite = BloodPool.Random();
                 spriteRenderer.sortingOrder = LevelContext.BloodLayer;
                 blood.transform.position = message.Position.ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
 
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Managers
             {
                 var blood = Instantiate(SimpleObject);
                 var spriteRenderer = blood.GetComponentInChildren<SpriteRenderer>();
-                spriteRenderer.sprite = BloodSplatter;
+                spriteRenderer.sprite = BloodSplatter.Random();
                 spriteRenderer.sortingOrder = LevelContext.BloodLayer;
                 blood.transform.position = message.Position + (message.Direction * (i + message.Force / 15) / 3).ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
                 spriteRenderer.transform.forward = message.Direction + new Vector3(0, Random.Range(-10f, 10f), 0);
