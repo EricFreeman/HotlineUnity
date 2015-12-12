@@ -39,8 +39,11 @@ namespace Assets.Scripts.Managers
                 spriteRenderer.sortingOrder = LevelContext.BloodLayer;
                 blood.transform.position = message.Position.ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
 
-                var opacity = Random.Range(.5f, 1f);
+                var size = Random.Range(.5f, 1.25f);
+                var opacity = Random.Range(.75f, 1f);
+
                 spriteRenderer.color = new Color(255, 255, 255, opacity);
+                blood.transform.localScale = new Vector3(size, size, size);
             }
 
             // Blood Bullet Path
