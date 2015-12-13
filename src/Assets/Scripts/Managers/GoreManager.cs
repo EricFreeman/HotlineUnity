@@ -38,6 +38,7 @@ namespace Assets.Scripts.Managers
                 spriteRenderer.sprite = BloodPool.Random();
                 spriteRenderer.sortingOrder = LevelContext.BloodLayer;
                 blood.transform.position = message.Position.ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
+                spriteRenderer.transform.forward = new Vector3(0, Random.Range(0f, 360f), 0);
 
                 var size = Random.Range(.5f, 1.25f);
                 var opacity = Random.Range(.75f, 1f);
