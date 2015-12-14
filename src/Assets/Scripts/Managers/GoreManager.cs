@@ -57,8 +57,11 @@ namespace Assets.Scripts.Managers
                 blood.transform.position = message.Position + (message.Direction * (i + message.Force / 15) / 3).ApplyFunction(() => Random.Range(-message.Force, message.Force) / 45f);
                 spriteRenderer.transform.forward = message.Direction + new Vector3(0, Random.Range(-10f, 10f), 0);
 
+                var size = Random.Range(.5f, 1.25f);
                 var opacity = Random.Range(.5f, 1f);
+
                 spriteRenderer.color = new Color(255, 255, 255, opacity);
+                blood.transform.localScale = new Vector3(size, size, size);
             }
 
             // Gibs!
