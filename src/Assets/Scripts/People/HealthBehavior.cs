@@ -8,12 +8,18 @@ namespace Assets.Scripts.People
     public class HealthBehavior : MonoBehaviour
     {
         public int Health = 5;
+        private IDamageBehavior _damageBehavior;
+
+        void Start()
+        {
+            _damageBehavior = GetComponent<IDamageBehavior>();
+        }
 
         void Update()
         {
             if (Health <= 0)
             {
-                Destroy(gameObject);
+                _damageBehavior.OnDeath();
             }
         }
 
@@ -31,6 +37,8 @@ namespace Assets.Scripts.People
                     Direction = bullet.transform.forward,
                     Force = bullet.Speed
                 });
+
+                _damageBehavior.OnHit();
             }
         }
     }
